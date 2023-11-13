@@ -10,15 +10,18 @@ use handlers::{
     get::{path_variables, root, query_params},
     post::{mirror_body_json, mirror_body_string},
 };
+use tower_http::cors::{CorsLayer, Any};
 
 #[tokio::main]
 async fn main() {
+    let cors = CorsLayer::new().allow_origin(Any);
     let app = Router::new()
         .route("/", get(root))
         .route("/path_variables/:id", get(path_variables))
         .route("/query_params", get(query_params))
         .route("/mirror_body_string", post(mirror_body_string))
-        .route("/mirror_body_json", post(mirror_body_json));
+        .route("/mirror_body_json", post(mirror_body_json))
+        .layer(cors);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     Server::bind(&addr)
