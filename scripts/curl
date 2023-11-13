@@ -6,4 +6,5 @@
 # curl 127.0.0.1:3000/path_variables/69
 # echo ""
 # curl 127.0.0.1:3000/path_variables/myeggs
-curl -v "127.0.0.1:3000/query_params?id=3&name=$(urlencode 'Guga Boy')&message=$(urlencode 'Hello People!')"
+# curl -v "127.0.0.1:3000/query_params?id=3&name=$(urlencode 'Guga Boy')&message=$(urlencode 'Hello People!')"
+curl -v 127.0.0.1:3000/get_json
