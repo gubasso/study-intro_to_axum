@@ -1,3 +1,3 @@
 #!/bin/sh
-. ./myenv.sh
+. ./envs/db.env
 psql "${CONN_URL}" -c "SELECT 'ready';"
