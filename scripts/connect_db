@@ -1,3 +1,4 @@
 #!/bin/sh
 . ./envs/db.env
-psql "${POSTGRES_URL}" -c "SELECT 'ready';"
+# psql "${DATABASE_URL}" -c "SELECT 'ready';"
+psql "${DATABASE_URL}"

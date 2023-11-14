@@ -1,21 +1,26 @@
 mod handlers;
 
-use std::{net::SocketAddr, env};
+use std::{net::SocketAddr, env, error::Error};
 
 use axum::{
     routing::{get, post},
-    Router, Server,
+    Router, Server, Extension,
 };
 use handlers::{
     get::{path_variables, root, query_params, get_json},
-    post::{mirror_body_json, mirror_body_string, validate_data},
+    post::{mirror_body_json, mirror_body_string, validate_data, create_task},
 };
+use sqlx::postgres::PgPoolOptions;
 use tower_http::cors::{CorsLayer, Any};
 
 #[tokio::main]
-async fn main() {
-    let db_url = env::var("POSTGRES_URL").unwrap();
-    dbg!(db_url);
+async fn main() -> Result<(), Box<dyn Error>> {
+    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = PgPoolOptions::new()
+        .max_connections(20)
+        .connect(&db_url)
+        .await
+        .expect("failed to connect to DATABASE_URL");
     let cors = CorsLayer::new().allow_origin(Any);
     let app = Router::new()
         .route("/", get(root))
@@ -25,6 +30,8 @@ async fn main() {
         .route("/mirror_body_string", post(mirror_body_string))
         .route("/mirror_body_json", post(mirror_body_json))
         .route("/validate_data", post(validate_data))
+        .route("/tasks", post(create_task))
+        .layer(Extension(pool))
         .layer(cors);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
@@ -32,4 +39,5 @@ async fn main() {
         .serve(app.into_make_service())
         .await
         .unwrap();
+    Ok(())
 }
