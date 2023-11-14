@@ -1,0 +1,4 @@
+#!/bin/sh
+. ./myenv.sh
+psql "${CONN_URL}" -c "SELECT 'ready';"
+# psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c "SELECT 'ready';"

@@ -6,6 +6,17 @@ pub async fn mirror_body_string(body: String) -> String {
 }
 
 #[derive(Deserialize, Debug)]
+pub struct ValDataLogin {
+    username: String,
+    password: String,
+    detail: Option<String>,
+}
+
+pub async fn validate_data(Json(login_data): Json<ValDataLogin>) {
+    dbg!(login_data);
+}
+
+#[derive(Deserialize, Debug)]
 pub struct MirrorJson {
     message: String,
 }

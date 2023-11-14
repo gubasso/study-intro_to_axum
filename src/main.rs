@@ -8,7 +8,7 @@ use axum::{
 };
 use handlers::{
     get::{path_variables, root, query_params, get_json},
-    post::{mirror_body_json, mirror_body_string},
+    post::{mirror_body_json, mirror_body_string, validate_data},
 };
 use tower_http::cors::{CorsLayer, Any};
 
@@ -22,6 +22,7 @@ async fn main() {
         .route("/get_json", get(get_json))
         .route("/mirror_body_string", post(mirror_body_string))
         .route("/mirror_body_json", post(mirror_body_json))
+        .route("/validate_data", post(validate_data))
         .layer(cors);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
