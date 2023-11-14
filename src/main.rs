@@ -1,6 +1,6 @@
 mod handlers;
 
-use std::net::SocketAddr;
+use std::{net::SocketAddr, env};
 
 use axum::{
     routing::{get, post},
@@ -14,6 +14,8 @@ use tower_http::cors::{CorsLayer, Any};
 
 #[tokio::main]
 async fn main() {
+    let db_url = env::var("POSTGRES_URL").unwrap();
+    dbg!(db_url);
     let cors = CorsLayer::new().allow_origin(Any);
     let app = Router::new()
         .route("/", get(root))

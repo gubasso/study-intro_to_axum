@@ -1,3 +1,4 @@
 #!/bin/sh
+. ./envs/db.env
 docker compose down
-sudo rm -rf data && mkdir data
+sudo rm -rf "$DATA_PATH"
