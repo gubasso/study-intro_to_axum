@@ -1,5 +1,7 @@
 # ripissue draft
 
+- [ ] continue playlist until error handling (or until the end), before replicate sqlx examples
+- [ ] implement steps using sqlx example: https://github.com/launchbadge/sqlx/tree/main/examples/postgres/axum-social-with-tests
 - [ ] setup migrations (integrate SQLx with Docker init.db)
   - [ ] sqlx migration model
   - [ ] SeaORM as a model to follow?
