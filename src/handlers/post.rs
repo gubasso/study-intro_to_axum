@@ -1,5 +1,3 @@
-use std::error::Error;
-
 use axum::{Json, Extension};
 use serde::{Deserialize, Serialize};
 use sqlx::{PgPool, query};
