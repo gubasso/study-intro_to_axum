@@ -3,12 +3,30 @@ use axum::{extract::{Path, Query}, Json, Extension, http::StatusCode};
 use serde::{Serialize, Deserialize};
 use sqlx::{PgPool, prelude::FromRow};
 
+#[derive(Deserialize)]
+pub struct QueryFilterTask {
+    pub priority: Option<String>,
+}
+
 #[derive(Serialize, FromRow)]
 pub struct ResponseTask {
     id: i32,
     title: String,
     priority: Option<String>,
     description: Option<String>,
+}
+pub async fn get_all_task(Extension(pool): Extension<PgPool>, Query(query): Query<QueryFilterTask>) -> Result<Json<Vec<ResponseTask>>, StatusCode> {
+    let mut q = "SELECT id, title, priority, description
+        FROM tasks ".to_string();
+    println!("{}", q);
+    if let Some(p) = query.priority {
+        q.push_str(&format!(" WHERE priority = '{}'", p));
+    };
+    println!("{}", q);
+    let qu = sqlx::query_as::<_, ResponseTask>(&q);
+     qu.fetch_all(&pool)
+        .await
+        .map_or(Err(StatusCode::INTERNAL_SERVER_ERROR), |t| Ok(Json(t)))
 }
 
 pub async fn get_one_task(Extension(pool): Extension<PgPool>, Path(id): Path<i32>) -> Result<Json<ResponseTask>, StatusCode> {

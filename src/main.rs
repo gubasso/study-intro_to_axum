@@ -7,7 +7,7 @@ use axum::{
     Router, Server, Extension,
 };
 use handlers::{
-    get::{path_variables, root, query_params, get_json, get_one_task},
+    get::{path_variables, root, query_params, get_json, get_one_task, get_all_task},
     post::{mirror_body_json, mirror_body_string, validate_data, create_task},
 };
 use sqlx::postgres::PgPoolOptions;
@@ -31,6 +31,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .route("/mirror_body_json", post(mirror_body_json))
         .route("/validate_data", post(validate_data))
         .route("/tasks", post(create_task))
+        .route("/tasks", get(get_all_task))
         .route("/tasks/:id", get(get_one_task))
         .layer(Extension(pool))
         .layer(cors);
